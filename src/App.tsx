@@ -1,16 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Button } from '@chakra-ui/react'
+import "./App.css";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Home from "./pages/home";
+import StudyRecords from "./pages/studyRecords";
+import NotFound from "./pages/notFound";
+import Setting from "./pages/Setting";
 
 function App() {
-
   return (
     <>
-    <Button>Click me</Button>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/study_records" element={<StudyRecords />} />
+          <Route path="/setting" element={<Setting />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
