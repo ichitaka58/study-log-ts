@@ -1,6 +1,5 @@
 import Header from "@/layout/Header";
 import { Flex, Link, Text } from "@chakra-ui/react";
-import React from "react";
 
 const NotFound = () => {
   return (

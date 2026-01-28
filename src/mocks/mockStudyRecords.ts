@@ -1,10 +1,4 @@
-type StudyRecord = {
-  id: number;
-  title: string;
-  time: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import type { StudyRecord } from "@/types/studyRecord";
 
 export const mockStudyRecords: StudyRecord[] = [
   {
