@@ -1,18 +1,21 @@
 import PencilSquare from "@/components/icons/PencilSquare";
 import TrashIcon from "@/components/icons/TrashIcon";
+import { useStudyRecord } from "@/hooks/useStudyRecord";
 import Header from "@/layout/Header";
 import { mockStudyRecords } from "@/mocks/mockStudyRecords";
-import { Button, Center, Container, Flex, Stack, Table, Text } from "@chakra-ui/react";
+import { Button, Center, Container, Flex, Spinner, Stack, Table, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 const StudyRecords = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { studyRecords, loading } = useStudyRecord();
 
   return (
     <>
       <Header />
-      {isLoading ? (
-        <Text>Loading...</Text>
+      {loading ? (
+        <Center h="100vh">
+          <Spinner size="xl" color="gray.600" />
+        </Center>
       ) : (
         <Container maxW="xl">
           <Stack>
@@ -54,7 +57,7 @@ const StudyRecords = () => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {mockStudyRecords.map((item) => (
+                {studyRecords.map((item) => (
                   <Table.Row key={item.id}>
                     <Table.Cell>{item.title}</Table.Cell>
                     <Table.Cell>{item.time} 時間</Table.Cell>

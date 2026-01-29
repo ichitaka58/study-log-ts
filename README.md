@@ -2,4 +2,5 @@
 
 - 日々の学習を記録する簡単なアプリ
 - React + TypeScript
+- データベース：supabase
 
