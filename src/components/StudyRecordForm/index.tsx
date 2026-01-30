@@ -1,27 +1,60 @@
-import type { StudyRecordFormValues } from "@/types/studyRecord";
+import type {
+  StudyRecord,
+  StudyRecordFormValues,
+  StudyRecordUpdate,
+} from "@/types/studyRecord";
 import { Button, Field, Input, Stack } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
 
 type Props = {
   onClose: () => void;
+  initialValue: StudyRecord | null;
   onCreate: (record: StudyRecordFormValues) => Promise<void>;
-}
+  onUpdate: (record: StudyRecordUpdate) => Promise<void>;
+};
 
-const StudyRecordForm = ({ onClose, onCreate }: Props) => {
+const StudyRecordForm = ({
+  onClose,
+  initialValue,
+  onCreate,
+  onUpdate,
+}: Props) => {
+  const isEdit = Boolean(initialValue);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm<StudyRecordFormValues>();
-  
+
+  useEffect(() => {
+    if (initialValue) {
+      reset({
+        title: initialValue.title ?? "",
+        time: initialValue.time ?? undefined,
+      });
+    } else {
+      reset({
+        title: "",
+        time: undefined,
+      });
+    }
+  }, [initialValue, reset]);
 
   const onSubmit = async (data: StudyRecordFormValues) => {
-    await onCreate(data);
-    // console.log(data);
+    if (initialValue) {
+      await onUpdate({
+        id: initialValue.id,
+        title: data.title,
+        time: data.time,
+      });
+    } else {
+      await onCreate(data);
+    }
     onClose();
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -39,20 +72,20 @@ const StudyRecordForm = ({ onClose, onCreate }: Props) => {
           <Input
             type="number"
             placeholder="例）2、2.5など"
-            {...register("time", { 
+            {...register("time", {
               required: "学習時間の入力は必須です。",
               setValueAs: (v) => (v === "" ? undefined : Number(v)),
               min: {
                 value: 0.01,
-                message: "0より大きい数値を入力してください。"
-              }
+                message: "0より大きい数値を入力してください。",
+              },
             })}
           />
           <Field.ErrorText>{errors.time?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Button type="submit" alignSelf="flex-end">
-          登録
+        <Button type="submit" alignSelf="flex-end" loading={isSubmitting}>
+          {isEdit ? "更新" : "登録"}
         </Button>
       </Stack>
     </form>

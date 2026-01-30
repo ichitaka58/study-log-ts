@@ -1,14 +1,21 @@
 import { Box, CloseButton, Dialog } from '@chakra-ui/react';
 import StudyRecordForm from '../StudyRecordForm';
-import type { StudyRecordInsert } from '@/types/studyRecord';
+import type { StudyRecord, StudyRecordInsert, StudyRecordUpdate } from '@/types/studyRecord';
 
 type Props = {
   open: boolean;
   onOpenChange: (e: {open: boolean}) => void;
-  onCreate: (record:StudyRecordInsert) => Promise<void>;
+  initialValue: StudyRecord | null;
+  onCreate: (record: StudyRecordInsert) => Promise<void>;
+  onUpdate: (record: StudyRecordUpdate) => Promise<void>;
+
 }
 
-const StudyRecordFormModal = ({ open, onOpenChange, onCreate }: Props) => {
+
+const StudyRecordFormModal = ({ open, onOpenChange, initialValue, onCreate, onUpdate }: Props) => {
+
+  const isEdit = !!initialValue;
+
   return (
     <Dialog.Root
       size={{ smDown: "xs", sm: "sm" }}
@@ -21,13 +28,15 @@ const StudyRecordFormModal = ({ open, onOpenChange, onCreate }: Props) => {
         <Dialog.Content>
           <Dialog.CloseTrigger />
           <Dialog.Header>
-            <Dialog.Title>新規登録</Dialog.Title>
+            <Dialog.Title>{ isEdit ? "記録編集" : "新規登録" }</Dialog.Title>
           </Dialog.Header>
           <Dialog.Body>
             <Box>
               <StudyRecordForm
                 onClose={() => onOpenChange({ open: false })}
+                initialValue={initialValue}
                 onCreate={onCreate}
+                onUpdate={onUpdate}
               />
             </Box>
           </Dialog.Body>

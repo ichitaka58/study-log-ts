@@ -4,12 +4,24 @@ import StudyRecordFormModal from "@/components/StudyRecordFormModal";
 import { useStudyRecord } from "@/hooks/useStudyRecord";
 import Header from "@/layout/Header";
 import { mockStudyRecords } from "@/mocks/mockStudyRecords";
+import type { StudyRecord } from "@/types/studyRecord";
 import { Button, Center, Container, Flex, Spinner, Stack, Table, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 const StudyRecords = () => {
-  const { studyRecords, loading, createStudyRecord, deleteStudyRecord } = useStudyRecord();
+  const { studyRecords, loading, createStudyRecord, deleteStudyRecord, updatedStudyRecord } = useStudyRecord();
   const [open, setOpen] = useState<boolean>(false);
+  const [editingRecord, setEditingRecord] = useState<StudyRecord | null>(null);
+
+  const onClickEdit = (record: StudyRecord) => {
+    setEditingRecord(record);
+    setOpen(true);
+  }
+
+  const onCloseModal = (e: { open: boolean }) => {
+    setOpen(e.open);
+    if(!e.open) setEditingRecord(null);
+  }
 
   return (
     <>
@@ -69,7 +81,11 @@ const StudyRecords = () => {
                     <Table.Cell>{record.time} 時間</Table.Cell>
                     <Table.Cell>
                       <Center>
-                        <button>
+                        <button
+                          aria-label="編集"
+                          onClick={() => onClickEdit(record)}
+                          style={{ cursor: "pointer" }}
+                        >
                           <PencilSquare size={16} />
                         </button>
                       </Center>
@@ -92,8 +108,10 @@ const StudyRecords = () => {
           </Stack>
           <StudyRecordFormModal
             open={open}
-            onOpenChange={(e) => setOpen(e.open)}
+            onOpenChange={onCloseModal}
+            initialValue={editingRecord}
             onCreate={createStudyRecord}
+            onUpdate={updatedStudyRecord}
           />
         </Container>
       )}
