@@ -8,7 +8,7 @@ import { Button, Center, Container, Flex, Spinner, Stack, Table, Text } from "@c
 import { useState } from "react";
 
 const StudyRecords = () => {
-  const { studyRecords, loading, createStudyRecord } = useStudyRecord();
+  const { studyRecords, loading, createStudyRecord, deleteStudyRecord } = useStudyRecord();
   const [open, setOpen] = useState<boolean>(false);
 
   return (
@@ -63,18 +63,26 @@ const StudyRecords = () => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {studyRecords.map((item) => (
-                  <Table.Row key={item.id}>
-                    <Table.Cell>{item.title}</Table.Cell>
-                    <Table.Cell>{item.time} 時間</Table.Cell>
+                {studyRecords.map((record) => (
+                  <Table.Row key={record.id}>
+                    <Table.Cell>{record.title}</Table.Cell>
+                    <Table.Cell>{record.time} 時間</Table.Cell>
                     <Table.Cell>
                       <Center>
-                        <PencilSquare size={16} />
+                        <button>
+                          <PencilSquare size={16} />
+                        </button>
                       </Center>
                     </Table.Cell>
                     <Table.Cell>
                       <Center>
-                        <TrashIcon size={16} />
+                        <button
+                          aria-label="削除"
+                          onClick={() => deleteStudyRecord(record.id)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <TrashIcon size={16} />
+                        </button>
                       </Center>
                     </Table.Cell>
                   </Table.Row>

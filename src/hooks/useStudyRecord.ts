@@ -1,4 +1,4 @@
-import { StudyRecordApi } from "@/api/studyRecordApi"
+import { StudyRecordApi } from "@/api/studyRecordApi";
 import type { StudyRecord, StudyRecordInsert } from "@/types/studyRecord";
 import { useEffect, useState } from "react";
 
@@ -13,27 +13,36 @@ export const useStudyRecord = () => {
     try {
       const records = await studyRecordApi.getAll();
       setStudyRecords(records);
-    }catch(error){
+    } catch (error) {
       console.error("データの取得失敗:", error);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     getStudyRecords();
   }, []);
 
-
-  const createStudyRecord = async (record: StudyRecordInsert): Promise<void> => {
+  const createStudyRecord = async (
+    record: StudyRecordInsert,
+  ): Promise<void> => {
     try {
       const created = await studyRecordApi.create(record);
       setStudyRecords((prev) => [...prev, created]);
-    }catch(error) {
+    } catch (error) {
       console.error("データの生成失敗:", error);
     }
-  }
+  };
 
-  return { studyRecords, loading, createStudyRecord };
+  const deleteStudyRecord = async (id: number): Promise<void> => {
+    try {
+      await studyRecordApi.delete(id);
+      setStudyRecords((prev) => prev.filter((r) => r.id !== id));
+    } catch (error) {
+      console.error("データの削除失敗:", error);
+    }
+  };
 
-}
+  return { studyRecords, loading, createStudyRecord, deleteStudyRecord };
+};
