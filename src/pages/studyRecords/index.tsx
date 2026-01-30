@@ -1,5 +1,6 @@
 import PencilSquare from "@/components/icons/PencilSquare";
 import TrashIcon from "@/components/icons/TrashIcon";
+import StudyRecordFormModal from "@/components/StudyRecordFormModal";
 import { useStudyRecord } from "@/hooks/useStudyRecord";
 import Header from "@/layout/Header";
 import { mockStudyRecords } from "@/mocks/mockStudyRecords";
@@ -7,7 +8,8 @@ import { Button, Center, Container, Flex, Spinner, Stack, Table, Text } from "@c
 import { useState } from "react";
 
 const StudyRecords = () => {
-  const { studyRecords, loading } = useStudyRecord();
+  const { studyRecords, loading, createStudyRecord } = useStudyRecord();
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -31,7 +33,11 @@ const StudyRecords = () => {
               </Text>
             </Flex>
             <Flex justify="end" align="center" my={2}>
-              <Button size={{ base: "sm", lg: "lg" }} colorPalette="yellow">
+              <Button
+                size={{ base: "sm", lg: "lg" }}
+                colorPalette="yellow"
+                onClick={() => setOpen(true)}
+              >
                 Entry
               </Button>
             </Flex>
@@ -76,6 +82,11 @@ const StudyRecords = () => {
               </Table.Body>
             </Table.Root>
           </Stack>
+          <StudyRecordFormModal
+            open={open}
+            onOpenChange={(e) => setOpen(e.open)}
+            onCreate={createStudyRecord}
+          />
         </Container>
       )}
     </>

@@ -1,20 +1,27 @@
+import type { StudyRecordFormValues } from "@/types/studyRecord";
 import { Button, Field, Input, Stack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
-// type FormValues = Omit<StudyRecord, "id" | "createdAt" | "updatedAt">;
-type StudyRecordFormValues = {
-  title: string;
-  time: number;
+
+type Props = {
+  onClose: () => void;
+  onCreate: (record: StudyRecordFormValues) => Promise<void>;
 }
 
-const StudyRecordForm = () => {
+const StudyRecordForm = ({ onClose, onCreate }: Props) => {
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<StudyRecordFormValues>();
+  
 
-  const onSubmit = (data: StudyRecordFormValues) => console.log(data);
+  const onSubmit = async (data: StudyRecordFormValues) => {
+    await onCreate(data);
+    // console.log(data);
+    onClose();
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>

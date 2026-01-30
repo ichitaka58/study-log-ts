@@ -1,7 +1,5 @@
-import StudyRecordForm from "@/components/StudyRecordForm";
 import Header from "@/layout/Header";
 import { Flex, Text } from "@chakra-ui/react";
-import React from "react";
 
 const Setting = () => {
   return (
@@ -11,8 +9,6 @@ const Setting = () => {
         <Text fontSize="4xl" fontWeight="bold">
           設定ページ
         </Text>
-        {/* デバッグ用 */}
-        <StudyRecordForm />
       </Flex>
     </>
   );
