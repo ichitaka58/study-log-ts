@@ -1,5 +1,5 @@
 import { StudyRecordApi } from "@/api/studyRecordApi";
-import type { StudyRecord, StudyRecordInsert } from "@/types/studyRecord";
+import type { StudyRecord, StudyRecordInsert, StudyRecordUpdate } from "@/types/studyRecord";
 import { useEffect, useState } from "react";
 
 const studyRecordApi = new StudyRecordApi();
@@ -35,6 +35,15 @@ export const useStudyRecord = () => {
     }
   };
 
+  const updatedStudyRecord = async (record: StudyRecordUpdate): Promise<void> => {
+    try {
+      const updated = await studyRecordApi.update(record);
+      setStudyRecords((prev) => prev.map((r) => r.id === updated.id ? r = updated : r));
+    }catch(error) {
+      console.error("データの更新失敗:", error);
+    }
+  }
+
   const deleteStudyRecord = async (id: number): Promise<void> => {
     try {
       await studyRecordApi.delete(id);
@@ -44,5 +53,11 @@ export const useStudyRecord = () => {
     }
   };
 
-  return { studyRecords, loading, createStudyRecord, deleteStudyRecord };
+  return {
+    studyRecords,
+    loading,
+    createStudyRecord,
+    deleteStudyRecord,
+    updatedStudyRecord,
+  };
 };

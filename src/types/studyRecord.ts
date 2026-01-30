@@ -11,3 +11,6 @@ export type StudyRecordInsert = Omit<StudyRecord, "id" | "createdAt" | "updatedA
 
 // フォーム入力用の型
 export type StudyRecordFormValues = StudyRecordInsert;
+
+// データ更新用の型
+export type StudyRecordUpdate = Pick<StudyRecord, "id" | "title" | "time">;
