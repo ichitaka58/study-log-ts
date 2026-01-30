@@ -6,3 +6,8 @@ export type StudyRecord = {
   updatedAt: string;
 };
 
+// 新規登録用の型
+export type StudyRecordInsert = Omit<StudyRecord, "id" | "createdAt" | "updatedAt">;
+
+// フォーム入力用の型
+export type StudyRecordFormValues = StudyRecordInsert;

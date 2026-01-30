@@ -1,5 +1,5 @@
 import { StudyRecordApi } from "@/api/studyRecordApi"
-import type { StudyRecord } from "@/types/studyRecord";
+import type { StudyRecord, StudyRecordInsert } from "@/types/studyRecord";
 import { useEffect, useState } from "react";
 
 const studyRecordApi = new StudyRecordApi();
@@ -24,5 +24,16 @@ export const useStudyRecord = () => {
     getStudyRecords();
   }, []);
 
-  return { studyRecords, loading };
+
+  const createStudyRecord = async (record: StudyRecordInsert): Promise<void> => {
+    try {
+      const created = await studyRecordApi.create(record);
+      setStudyRecords((prev) => [...prev, created]);
+    }catch(error) {
+      console.error("データの生成失敗:", error);
+    }
+  }
+
+  return { studyRecords, loading, createStudyRecord };
+
 }
