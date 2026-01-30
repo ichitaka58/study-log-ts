@@ -27,7 +27,12 @@ const StudyRecordForm = ({
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<StudyRecordFormValues>();
+  } = useForm<StudyRecordFormValues>({
+    defaultValues: {
+      title: "",
+      time: undefined,
+    },
+  });
 
   useEffect(() => {
     if (initialValue) {
