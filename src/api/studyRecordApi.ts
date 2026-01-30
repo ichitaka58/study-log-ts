@@ -24,5 +24,12 @@ export class StudyRecordApi {
     return data as StudyRecord;
   } 
 
+  async delete(id: number):Promise<void> {
+    const { error } = await supabase
+      .from("new_study_records")
+      .delete()
+      .eq("id", id);
+    if(error) throw error;
+  }
 
 }
