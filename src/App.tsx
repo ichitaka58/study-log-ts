@@ -4,16 +4,18 @@ import Home from "./pages/home";
 import StudyRecords from "./pages/studyRecords";
 import NotFound from "./pages/notFound";
 import Setting from "./pages/setting";
+import PATHS from "./router/paths";
+
 
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/study_records" element={<StudyRecords />} />
-          <Route path="/setting" element={<Setting />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path={PATHS.HOME} element={<Home />} />
+          <Route path={PATHS.STUDY_RECORDS} element={<StudyRecords />} />
+          <Route path={PATHS.SETTING} element={<Setting />} />
+          <Route path={PATHS.NOTFOUND} element={<NotFound />} />
         </Routes>
       </Router>
     </>
