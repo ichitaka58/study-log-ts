@@ -1,4 +1,5 @@
 import Header from "@/layout/Header";
+import PATHS from "@/router/paths";
 import { Flex, Link, Text } from "@chakra-ui/react";
 
 const NotFound = () => {
@@ -9,7 +10,7 @@ const NotFound = () => {
         <Text fontSize="4xl" fontWeight="bold">
           Not Found
         </Text>
-        <Link href="/">ホームに戻る</Link>
+        <Link href={PATHS.HOME}>ホームに戻る</Link>
       </Flex>
     </>
   );
