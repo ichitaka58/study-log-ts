@@ -1,27 +1,42 @@
-import PencilSquare from "@/components/icons/PencilSquare";
-import TrashIcon from "@/components/icons/TrashIcon";
+import ConfirmDeleteModal from "@/components/comfirmModals/ConfirmDeleteModal";
 import StudyRecordFormModal from "@/components/StudyRecordFormModal";
 import { useStudyRecord } from "@/hooks/useStudyRecord";
 import Header from "@/layout/Header";
 import { mockStudyRecords } from "@/mocks/mockStudyRecords";
 import type { StudyRecord } from "@/types/studyRecord";
-import { Button, Center, Container, Flex, Spinner, Stack, Table, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Container,
+  Flex,
+  Spinner,
+  Stack,
+  Table,
+  Text,
+} from "@chakra-ui/react";
+import { Trash2, SquarePen } from "lucide-react";
 import { useState } from "react";
 
 const StudyRecords = () => {
-  const { studyRecords, loading, createStudyRecord, deleteStudyRecord, updatedStudyRecord } = useStudyRecord();
+  const {
+    studyRecords,
+    loading,
+    createStudyRecord,
+    deleteStudyRecord,
+    updatedStudyRecord,
+  } = useStudyRecord();
   const [open, setOpen] = useState<boolean>(false);
   const [editingRecord, setEditingRecord] = useState<StudyRecord | null>(null);
 
   const onClickEdit = (record: StudyRecord) => {
     setEditingRecord(record);
     setOpen(true);
-  }
+  };
 
   const onCloseModal = (e: { open: boolean }) => {
     setOpen(e.open);
-    if(!e.open) setEditingRecord(null);
-  }
+    if (!e.open) setEditingRecord(null);
+  };
 
   return (
     <>
@@ -81,24 +96,29 @@ const StudyRecords = () => {
                     <Table.Cell>{record.time} 時間</Table.Cell>
                     <Table.Cell>
                       <Center>
-                        <button
+                        <Button
                           aria-label="編集"
                           onClick={() => onClickEdit(record)}
                           style={{ cursor: "pointer" }}
+                          variant="ghost"
+                          size="xs"
                         >
-                          <PencilSquare size={16} />
-                        </button>
+                          <SquarePen />
+                        </Button>
                       </Center>
                     </Table.Cell>
                     <Table.Cell>
                       <Center>
-                        <button
-                          aria-label="削除"
-                          onClick={() => deleteStudyRecord(record.id)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <TrashIcon size={16} />
-                        </button>
+                        <ConfirmDeleteModal onDelete={() => deleteStudyRecord(record.id)} title={record.title}>
+                          <Button
+                            aria-label="削除"
+                            style={{ cursor: "pointer" }}
+                            variant="ghost"
+                            size="xs"
+                          >
+                            <Trash2 />
+                          </Button>
+                        </ConfirmDeleteModal>
                       </Center>
                     </Table.Cell>
                   </Table.Row>
