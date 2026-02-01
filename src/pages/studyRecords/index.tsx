@@ -1,27 +1,57 @@
-import PencilSquare from "@/components/icons/PencilSquare";
-import TrashIcon from "@/components/icons/TrashIcon";
+import ConfirmDeleteModal from "@/components/comfirmModals/ConfirmDeleteModal";
 import StudyRecordFormModal from "@/components/StudyRecordFormModal";
 import { useStudyRecord } from "@/hooks/useStudyRecord";
 import Header from "@/layout/Header";
 import { mockStudyRecords } from "@/mocks/mockStudyRecords";
 import type { StudyRecord } from "@/types/studyRecord";
-import { Button, Center, Container, Flex, Spinner, Stack, Table, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Container,
+  Flex,
+  Spinner,
+  Stack,
+  Table,
+  Text,
+} from "@chakra-ui/react";
+import { Trash2, SquarePen } from "lucide-react";
 import { useState } from "react";
 
 const StudyRecords = () => {
-  const { studyRecords, loading, createStudyRecord, deleteStudyRecord, updatedStudyRecord } = useStudyRecord();
-  const [open, setOpen] = useState<boolean>(false);
-  const [editingRecord, setEditingRecord] = useState<StudyRecord | null>(null);
+  const {
+    studyRecords,
+    loading,
+    createStudyRecord,
+    deleteStudyRecord,
+    updatedStudyRecord,
+  } = useStudyRecord();
+  
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
+  // レコード編集、削除共通の選択されたレコードをstateにセット
+  const [selectedRecord, setSelectedRecord] = useState<StudyRecord | null>(null);
 
   const onClickEdit = (record: StudyRecord) => {
-    setEditingRecord(record);
-    setOpen(true);
-  }
+    setSelectedRecord(record);
+    setIsEditOpen(true);
+  };
 
-  const onCloseModal = (e: { open: boolean }) => {
-    setOpen(e.open);
-    if(!e.open) setEditingRecord(null);
-  }
+  const onClickDelete = (record: StudyRecord) => {
+    setSelectedRecord(record);
+    setIsDeleteOpen(true);
+  };
+
+  // onOpenChange=モーダルが開いた、閉じたを教えてくれる
+  const onEditOpenChange = (e: { open: boolean }) => {
+    setIsEditOpen(e.open);
+    // 閉じた時＝>e.open:false => !e.open:trueとなり、レコードをクリア
+    if (!e.open) setSelectedRecord(null);
+  };
+
+  const onDeleteOpenChange = (e: { open: boolean }) => {
+    setIsDeleteOpen(e.open);
+    if (!e.open) setSelectedRecord(null);
+  };
 
   return (
     <>
@@ -48,7 +78,10 @@ const StudyRecords = () => {
               <Button
                 size={{ base: "sm", lg: "lg" }}
                 colorPalette="yellow"
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                  setSelectedRecord(null);
+                  setIsEditOpen(true);
+                }}
               >
                 Entry
               </Button>
@@ -81,24 +114,28 @@ const StudyRecords = () => {
                     <Table.Cell>{record.time} 時間</Table.Cell>
                     <Table.Cell>
                       <Center>
-                        <button
+                        <Button
                           aria-label="編集"
                           onClick={() => onClickEdit(record)}
                           style={{ cursor: "pointer" }}
+                          variant="ghost"
+                          size="xs"
                         >
-                          <PencilSquare size={16} />
-                        </button>
+                          <SquarePen />
+                        </Button>
                       </Center>
                     </Table.Cell>
                     <Table.Cell>
                       <Center>
-                        <button
+                        <Button
                           aria-label="削除"
-                          onClick={() => deleteStudyRecord(record.id)}
+                          onClick={() => onClickDelete(record)}
                           style={{ cursor: "pointer" }}
+                          variant="ghost"
+                          size="xs"
                         >
-                          <TrashIcon size={16} />
-                        </button>
+                          <Trash2 />
+                        </Button>
                       </Center>
                     </Table.Cell>
                   </Table.Row>
@@ -107,11 +144,17 @@ const StudyRecords = () => {
             </Table.Root>
           </Stack>
           <StudyRecordFormModal
-            open={open}
-            onOpenChange={onCloseModal}
-            initialValue={editingRecord}
+            open={isEditOpen}
+            onOpenChange={onEditOpenChange}
+            initialValue={selectedRecord}
             onCreate={createStudyRecord}
             onUpdate={updatedStudyRecord}
+          />
+          <ConfirmDeleteModal
+            open={isDeleteOpen && selectedRecord !== null}
+            onOpenChange={onDeleteOpenChange}
+            selectedRecord={selectedRecord}
+            onDelete={deleteStudyRecord}
           />
         </Container>
       )}
