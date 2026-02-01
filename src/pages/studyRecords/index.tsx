@@ -25,17 +25,32 @@ const StudyRecords = () => {
     deleteStudyRecord,
     updatedStudyRecord,
   } = useStudyRecord();
-  const [open, setOpen] = useState<boolean>(false);
-  const [editingRecord, setEditingRecord] = useState<StudyRecord | null>(null);
+  
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
+  // レコード編集、削除共通の選択されたレコードをstateにセット
+  const [selectedRecord, setSelectedRecord] = useState<StudyRecord | null>(null);
 
   const onClickEdit = (record: StudyRecord) => {
-    setEditingRecord(record);
-    setOpen(true);
+    setSelectedRecord(record);
+    setIsEditOpen(true);
   };
 
-  const onCloseModal = (e: { open: boolean }) => {
-    setOpen(e.open);
-    if (!e.open) setEditingRecord(null);
+  const onClickDelete = (record: StudyRecord) => {
+    setSelectedRecord(record);
+    setIsDeleteOpen(true);
+  };
+
+  // onOpenChange=モーダルが開いた、閉じたを教えてくれる
+  const onEditOpenChange = (e: { open: boolean }) => {
+    setIsEditOpen(e.open);
+    // 閉じた時＝>e.open:false => !e.open:trueとなり、レコードをクリア
+    if (!e.open) setSelectedRecord(null);
+  };
+
+  const onDeleteOpenChange = (e: { open: boolean }) => {
+    setIsDeleteOpen(e.open);
+    if (!e.open) setSelectedRecord(null);
   };
 
   return (
@@ -63,7 +78,10 @@ const StudyRecords = () => {
               <Button
                 size={{ base: "sm", lg: "lg" }}
                 colorPalette="yellow"
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                  setSelectedRecord(null);
+                  setIsEditOpen(true);
+                }}
               >
                 Entry
               </Button>
@@ -109,16 +127,15 @@ const StudyRecords = () => {
                     </Table.Cell>
                     <Table.Cell>
                       <Center>
-                        <ConfirmDeleteModal onDelete={() => deleteStudyRecord(record.id)} title={record.title}>
-                          <Button
-                            aria-label="削除"
-                            style={{ cursor: "pointer" }}
-                            variant="ghost"
-                            size="xs"
-                          >
-                            <Trash2 />
-                          </Button>
-                        </ConfirmDeleteModal>
+                        <Button
+                          aria-label="削除"
+                          onClick={() => onClickDelete(record)}
+                          style={{ cursor: "pointer" }}
+                          variant="ghost"
+                          size="xs"
+                        >
+                          <Trash2 />
+                        </Button>
                       </Center>
                     </Table.Cell>
                   </Table.Row>
@@ -127,11 +144,17 @@ const StudyRecords = () => {
             </Table.Root>
           </Stack>
           <StudyRecordFormModal
-            open={open}
-            onOpenChange={onCloseModal}
-            initialValue={editingRecord}
+            open={isEditOpen}
+            onOpenChange={onEditOpenChange}
+            initialValue={selectedRecord}
             onCreate={createStudyRecord}
             onUpdate={updatedStudyRecord}
+          />
+          <ConfirmDeleteModal
+            open={isDeleteOpen && selectedRecord !== null}
+            onOpenChange={onDeleteOpenChange}
+            selectedRecord={selectedRecord}
+            onDelete={deleteStudyRecord}
           />
         </Container>
       )}

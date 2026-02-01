@@ -1,33 +1,31 @@
+import type { StudyRecord } from "@/types/studyRecord";
 import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
 import { useState } from "react";
 
 type Props = {
-  onDelete: () => Promise<void>;
-  title: string;
-  children: ReactNode;
+  open: boolean;
+  onOpenChange: (e: { open: boolean }) => void;
+  selectedRecord: StudyRecord | null;
+  onDelete: (id: number) => Promise<void>;
 };
 
-const ConfirmDeleteModal = ({ onDelete, title, children }: Props) => {
-  const [open, setOpen] = useState<boolean>(false);
+const ConfirmDeleteModal = ({ open, onOpenChange, selectedRecord, onDelete }: Props) => {
+  
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleDelete = async () => {
+    if(!selectedRecord) return;
     setLoading(true);
     try {
-      await onDelete();
-      setOpen(false); // 成功したら閉じる
-    } finally {
+      await onDelete(selectedRecord.id);
+      onOpenChange({open: false}); // 成功したら閉じる
+    }finally {
       setLoading(false);
     }
   };
 
   return (
-    <Dialog.Root
-      role="alertdialog"
-      open={open}
-      onOpenChange={(e) => setOpen(e.open)}
-    >
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+    <Dialog.Root role="alertdialog" open={open} onOpenChange={onOpenChange}>
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
@@ -36,7 +34,7 @@ const ConfirmDeleteModal = ({ onDelete, title, children }: Props) => {
               <Dialog.Title>削除確認</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
-              <p>本当に学習記録"{title}"を削除しますか？</p>
+              <p>本当に学習記録"{selectedRecord?.title}"を削除しますか？</p>
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
@@ -48,6 +46,7 @@ const ConfirmDeleteModal = ({ onDelete, title, children }: Props) => {
                 onClick={handleDelete}
                 colorPalette="red"
                 loading={loading}
+                disabled={!selectedRecord || loading}
               >
                 削除
               </Button>
