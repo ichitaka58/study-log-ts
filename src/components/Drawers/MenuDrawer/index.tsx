@@ -19,7 +19,7 @@ const MenuDrawer = ({
   children,
 }: Props) => {
   return (
-    <Drawer.Root placement="end" open={open} onOpenChange={onOpenChange}>
+    <Drawer.Root placement="end" open={open} onOpenChange={onOpenChange} lazyMount>
       <Drawer.Backdrop />
       <Drawer.Trigger asChild>
         {children}

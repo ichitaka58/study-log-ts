@@ -21,6 +21,7 @@ const StudyRecordFormModal = ({ open, onOpenChange, initialValue, onCreate, onUp
       size={{ smDown: "xs", sm: "sm" }}
       open={open}
       onOpenChange={onOpenChange}
+      lazyMount
     >
       <Dialog.Trigger />
       <Dialog.Backdrop />
