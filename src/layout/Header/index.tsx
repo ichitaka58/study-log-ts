@@ -1,17 +1,26 @@
-import MenuIconButton from "@/components/button/MenuIconButton";
 import MenuDrawer from "@/components/Drawers/MenuDrawer";
 import PATHS from "@/router/paths";
-import { Box, Flex, Heading, Link } from "@chakra-ui/react";
+import { Box, Flex, Heading, IconButton } from "@chakra-ui/react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Header = () => {
-  const navigate = useNavigate();
-  const onClickHome = () => navigate(PATHS.HOME);
-  const onClickStudyRecords = () => navigate(PATHS.STUDY_RECORDS);
-  const onClickSetting = () => navigate(PATHS.SETTING);
-
   const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const onClickHome = () => {
+    navigate(PATHS.HOME);
+    setOpen(false);
+  };
+  const onClickStudyRecords = () => {
+    navigate(PATHS.STUDY_RECORDS);
+    setOpen(false);
+  };
+  const onClickSetting = () => {
+    navigate(PATHS.SETTING);
+    setOpen(false);
+  };
 
   return (
     <>
@@ -22,16 +31,16 @@ const Header = () => {
         justify="space-between"
         padding={{ base: 3, md: 5 }}
       >
-        <Flex
-          as="a"
-          align="center"
-          _hover={{ cursor: "pointer" }}
-          onClick={onClickHome}
-        >
-          <Heading as="h1" fontSize={{ base: "md", md: "lg" }} mr={4}>
+        <Link to={PATHS.HOME}>
+          <Heading
+            as="h1"
+            fontSize={{ base: "md", md: "lg" }}
+            mr={4}
+            textAlign="center"
+          >
             シン・学習記録アプリ
           </Heading>
-        </Flex>
+        </Link>
         <Flex
           align="center"
           fontSize="sm"
@@ -40,21 +49,29 @@ const Header = () => {
           gap="4"
         >
           <Box>
-            <Link onClick={onClickStudyRecords}>学習記録</Link>
+            <Link to={PATHS.STUDY_RECORDS}>学習記録</Link>
           </Box>
           <Box>
-            <Link onClick={onClickSetting}>設定</Link>
+            <Link to={PATHS.SETTING}>設定</Link>
           </Box>
         </Flex>
-        <MenuIconButton onClick={() => setOpen(true)} />
+        <MenuDrawer
+          open={open}
+          onOpenChange={(e) => setOpen(e.open)}
+          onClickHome={onClickHome}
+          onClickStudyRecords={onClickStudyRecords}
+          onClickSetting={onClickSetting}
+        >
+          <IconButton
+            variant="ghost"
+            _hover={{ bg: "yellow.200" }}
+            display={{ base: "flex", md: "none" }}
+            aria-label="Open menu"
+          >
+            <Menu />
+          </IconButton>
+        </MenuDrawer>
       </Flex>
-      <MenuDrawer
-        open={open}
-        onOpenChange={(e) => setOpen(e.open)}
-        onClickHome={onClickHome}
-        onClickStudyRecords={onClickStudyRecords}
-        onClickSetting={onClickSetting}
-      />
     </>
   );
 };

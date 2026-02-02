@@ -1,5 +1,5 @@
 import { Button, CloseButton, Drawer } from '@chakra-ui/react';
-import React from 'react'
+import type { ReactElement } from 'react';
 
 type Props = {
   open: boolean;
@@ -7,6 +7,7 @@ type Props = {
   onClickHome: () => void;
   onClickStudyRecords: () => void;
   onClickSetting: () => void;
+  children: ReactElement;
 };
 
 const MenuDrawer = ({
@@ -15,11 +16,14 @@ const MenuDrawer = ({
   onClickHome,
   onClickStudyRecords,
   onClickSetting,
+  children,
 }: Props) => {
   return (
     <Drawer.Root placement="end" open={open} onOpenChange={onOpenChange}>
       <Drawer.Backdrop />
-      <Drawer.Trigger />
+      <Drawer.Trigger asChild>
+        {children}
+      </Drawer.Trigger>
       <Drawer.Positioner>
         <Drawer.Content bg="gray.100">
           <Drawer.CloseTrigger asChild>
