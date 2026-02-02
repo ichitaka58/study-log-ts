@@ -2,7 +2,6 @@ import ConfirmDeleteModal from "@/components/comfirmModals/ConfirmDeleteModal";
 import StudyRecordFormModal from "@/components/StudyRecordFormModal";
 import { useStudyRecord } from "@/hooks/useStudyRecord";
 import Header from "@/layout/Header";
-import { mockStudyRecords } from "@/mocks/mockStudyRecords";
 import type { StudyRecord } from "@/types/studyRecord";
 import {
   Button,
