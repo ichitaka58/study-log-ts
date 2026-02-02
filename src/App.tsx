@@ -5,6 +5,7 @@ import StudyRecords from "./pages/studyRecords";
 import NotFound from "./pages/notFound";
 import Setting from "./pages/setting";
 import PATHS from "./router/paths";
+import { Toaster } from "./components/ui/toaster";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path={PATHS.NOTFOUND} element={<NotFound />} />
         </Routes>
       </Router>
+      <Toaster />
     </>
   );
 }
