@@ -25,7 +25,7 @@ const ConfirmDeleteModal = ({ open, onOpenChange, selectedRecord, onDelete }: Pr
   };
 
   return (
-    <Dialog.Root role="alertdialog" open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root role="alertdialog" open={open} onOpenChange={onOpenChange} lazyMount>
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
