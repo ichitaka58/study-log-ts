@@ -21,12 +21,14 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           react: ["react", "react-dom", "react-router-dom"],
-          chakra: [
-            "@chakra-ui/react",
-            "@emotion/react",
-          ],
+          chakra: ["@chakra-ui/react", "@emotion/react"],
         },
       },
     },
+  },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: "./src/setupTests.ts",
   },
 }));
