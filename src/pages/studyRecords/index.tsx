@@ -56,7 +56,7 @@ const StudyRecords = () => {
     <>
       <Header />
       {loading ? (
-        <Center h="100vh">
+        <Center h="100vh" aria-label="loading">
           <Spinner size="xl" color="gray.600" />
         </Center>
       ) : (
@@ -82,7 +82,7 @@ const StudyRecords = () => {
                   setIsEditOpen(true);
                 }}
               >
-                Entry
+                新規登録
               </Button>
             </Flex>
             <Table.Root
