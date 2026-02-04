@@ -1,13 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import { renderWithProviders } from "@/test/render";
+import PATHS from "./router/paths";
 import App from "./App";
-import { Provider } from "./components/ui/provider";
 
 test("shows loading first, then title", async () => {
-  render(
-    <Provider>
-      <App />
-    </Provider>
-  );
+
+  renderWithProviders(<App />, PATHS.HOME);
 
   expect(screen.getByLabelText("loading")).toBeInTheDocument();
 

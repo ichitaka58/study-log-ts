@@ -7,11 +7,12 @@ import type {
 import { useEffect, useState } from "react";
 import { useToastMessage } from "./useToastMessage";
 
-const studyRecordApi = new StudyRecordApi();
-
 const { toastSuccess, toastError } = useToastMessage();
 
 export const useStudyRecord = () => {
+  
+  const studyRecordApi = new StudyRecordApi();
+
   const [studyRecords, setStudyRecords] = useState<StudyRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
