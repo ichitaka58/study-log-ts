@@ -16,7 +16,7 @@ function App() {
     <>
       <Router>
         <Suspense fallback={
-          <Center minH="100vh">
+          <Center minH="100vh" aria-label="loading">
             <Spinner />
           </Center>
         }>
