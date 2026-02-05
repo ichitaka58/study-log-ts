@@ -145,6 +145,68 @@ describe("学習記録一覧ページ", () => {
     expect(createMock).not.toHaveBeenCalled();
   });
 
+  test("学習記録が編集できること", async () => {
+    getAllMock.mockResolvedValueOnce(mockStudyRecords);
+    const target = mockStudyRecords[0];
+
+    // update成功
+    updateMock.mockResolvedValueOnce({
+      ...target,
+      title: "moritaka updated",
+      time: 3,
+    });
+
+    renderWithProviders(<StudyRecords />, PATHS.STUDY_RECORDS);
+    // target行を特定
+    const titleCell = await screen.findByText(target.title);
+    const row = titleCell.closest("tr");
+    if (!row) throw new Error("row(tr)が見つかりません");
+
+    // 行内の「編集」ボタンをクリック
+    await userEvent.click(within(row).getByLabelText("編集"));
+    // 編集モーダル
+    const dialog = await screen.findByRole("dialog");
+    // モーダルのタイトルが「記録編集」になっている
+    expect(within(dialog).getByText("記録編集")).toBeInTheDocument();
+    // モーダルのボタンが「更新」になっている
+    expect(
+      within(dialog).getByRole("button", { name: "更新" }),
+    ).toBeInTheDocument();
+
+    // 初期値をとる
+    const titleInput = within(dialog).getByLabelText("学習内容");
+    expect(titleInput).toHaveValue(target.title);
+
+    const timeInput = within(dialog).getByLabelText("学習時間");
+    expect(timeInput).toHaveValue(target.time);
+
+    // 値を変更
+    await userEvent.clear(titleInput);
+    await userEvent.type(titleInput, "moritaka updated");
+
+    await userEvent.clear(timeInput);
+    await userEvent.type(timeInput, "3");
+    // 「更新」ボタンをクリック
+    await userEvent.click(within(dialog).getByRole("button", { name: "更新" }));
+
+    // updateが正しい引数で呼ばれた（target.idを含む形）
+    await waitFor(() => {
+      expect(updateMock).toHaveBeenCalledTimes(1);
+      expect(updateMock).toHaveBeenCalledWith({
+        id: target.id,
+        title: "moritaka updated",
+        time: 3,
+      });
+    });
+
+    // 一覧に反映（旧タイトルが消えて新タイトルが出る想定）
+    await waitFor(() => {
+      // queryByText:存在しないことを確認するための専用API
+      expect(screen.queryByText(target.title)).not.toBeInTheDocument();
+    });
+    expect(await screen.findByText("moritaka updated")).toBeInTheDocument();
+  });
+
   test("学習記録が削除できること", async () => {
     getAllMock.mockResolvedValueOnce(mockStudyRecords);
 
@@ -159,7 +221,7 @@ describe("学習記録一覧ページ", () => {
     // 削除するボタン（行）を特定
     const titleCell = await screen.findByText(target.title);
     const row = titleCell.closest("tr");
-    if(!row) throw new Error("row(tr)が見つかりません");
+    if (!row) throw new Error("row(tr)が見つかりません");
 
     await userEvent.click(within(row).getByLabelText("削除"));
     const dialog = await screen.findByRole("alertdialog");
