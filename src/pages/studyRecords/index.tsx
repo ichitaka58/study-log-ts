@@ -69,7 +69,12 @@ const StudyRecords = () => {
               direction="column"
               my={4}
             >
-              <Text fontSize={{ base: "2xl", lg: "4xl" }} fontWeight="bold">
+              <Text
+                fontSize={{ base: "2xl", lg: "4xl" }}
+                fontWeight="bold"
+                textDecoration="underline"
+                textDecorationColor="yellow.400"
+              >
                 学習記録一覧
               </Text>
             </Flex>
