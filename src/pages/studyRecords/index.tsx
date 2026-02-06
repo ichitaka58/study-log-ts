@@ -24,7 +24,7 @@ const StudyRecords = () => {
     deleteStudyRecord,
     updatedStudyRecord,
   } = useStudyRecord();
-  
+
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   // レコード編集、削除共通の選択されたレコードをstateにセット

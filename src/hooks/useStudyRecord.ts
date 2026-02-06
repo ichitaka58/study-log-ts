@@ -4,19 +4,21 @@ import type {
   StudyRecordInsert,
   StudyRecordUpdate,
 } from "@/types/studyRecord";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useToastMessage } from "./useToastMessage";
 
-const { toastSuccess, toastError } = useToastMessage();
-
 export const useStudyRecord = () => {
-  
-  const studyRecordApi = new StudyRecordApi();
+
+  // トースト表示のカスタムフック
+  const { toastSuccess, toastError } = useToastMessage();
+
+  // 毎レンダーnewしないようにuseMemoでメモ化
+  const studyRecordApi = useMemo(() => new StudyRecordApi(), []);
 
   const [studyRecords, setStudyRecords] = useState<StudyRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getStudyRecords = async () => {
+  const getStudyRecords = useCallback(async () => {
     setLoading(true);
     try {
       const records = await studyRecordApi.getAll();
@@ -27,13 +29,13 @@ export const useStudyRecord = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [studyRecordApi, toastError]);
 
   useEffect(() => {
-    getStudyRecords();
-  }, []);
+    void getStudyRecords();
+  }, [getStudyRecords]);
 
-  const createStudyRecord = async (
+  const createStudyRecord = useCallback(async (
     record: StudyRecordInsert,
   ): Promise<void> => {
     try {
@@ -44,9 +46,9 @@ export const useStudyRecord = () => {
       console.error("データの生成失敗:", error);
       toastError("データ生成エラー", "データの生成に失敗しました。");
     }
-  };
+  }, [studyRecordApi, toastSuccess, toastError]);
 
-  const updatedStudyRecord = async (
+  const updatedStudyRecord = useCallback(async (
     record: StudyRecordUpdate,
   ): Promise<void> => {
     try {
@@ -59,9 +61,9 @@ export const useStudyRecord = () => {
       console.error("データの更新失敗:", error);
       toastError("データ更新エラー", "データが更新できませんでした");
     }
-  };
+  }, [studyRecordApi, toastSuccess, toastError]);
 
-  const deleteStudyRecord = async (id: number): Promise<void> => {
+  const deleteStudyRecord = useCallback(async (id: number): Promise<void> => {
     try {
       await studyRecordApi.delete(id);
       setStudyRecords((prev) => prev.filter((r) => r.id !== id));
@@ -70,7 +72,7 @@ export const useStudyRecord = () => {
       console.error("データの削除失敗:", error);
       toastError("データ削除エラー", "データが削除できませんでした");
     }
-  };
+  }, [studyRecordApi, toastSuccess, toastError]);
 
   return {
     studyRecords,
