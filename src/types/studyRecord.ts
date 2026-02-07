@@ -2,12 +2,12 @@ export type StudyRecord = {
   id: number;
   title: string;
   time: number;
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string | null;
 };
 
 // 新規登録用の型
-export type StudyRecordInsert = Omit<StudyRecord, "id" | "createdAt" | "updatedAt">;
+export type StudyRecordInsert = Omit<StudyRecord, "id" | "created_at" | "updated_at">;
 
 // フォーム入力用の型
 export type StudyRecordFormValues = StudyRecordInsert;
