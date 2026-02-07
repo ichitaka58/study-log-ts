@@ -1,20 +1,22 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-// StudyRecordApiをモック
-const getAllMock = vi.fn();
-const createMock = vi.fn();
-const updateMock = vi.fn();
-const deleteMock = vi.fn();
+const { getAllMock, createMock, updateMock, deleteMock } = vi.hoisted(() => {
+  return {
+    getAllMock: vi.fn(),
+    createMock: vi.fn(),
+    updateMock: vi.fn(),
+    deleteMock: vi.fn(),
+  };
+});
 
 // ファイルの一番上で実行されるため、importより前に書く
 vi.mock("@/api/studyRecordApi", () => {
-  class StudyRecordApi {
-    getAll = getAllMock;
-    create = createMock;
-    update = updateMock;
-    delete = deleteMock;
-  }
-  return { StudyRecordApi };
+  return {
+    getAllStudyRecords: getAllMock,
+    createStudyRecord: createMock,
+    updateStudyRecord: updateMock,
+    deleteStudyRecord: deleteMock,
+  };
 });
 
 import { mockStudyRecords } from "@/mocks/mockStudyRecords";
@@ -32,7 +34,7 @@ beforeEach(() => {
 describe("学習記録一覧ページ", () => {
   test("ローディング画面を見ることができる", async () => {
     // getAllが解決しない Promise → ずっとローディング
-    getAllMock.mockReturnValue(new Promise(() => {}));
+    getAllMock.mockReturnValue(new Promise(() => { }));
 
     renderWithProviders(<StudyRecords />, PATHS.STUDY_RECORDS);
 
